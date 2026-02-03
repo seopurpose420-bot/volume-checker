@@ -18,18 +18,44 @@ app.post('/api/login', (req, res) => {
 });
 
 // Store keywords (no auth required for posting)
-app.post('/api/keywords', (req, res) => {
+app.post('/api/keywords', async (req, res) => {
   console.log('Received POST request:', req.body);
   const { data } = req.body;
   if (data && Array.isArray(data)) {
     keywordData.push(...data);
     console.log('Data stored. Total items:', keywordData.length);
+    
+    // Send to Google Sheets
+    await sendToGoogleSheets(data);
+    
     res.json({ success: true, count: data.length });
   } else {
     console.log('Invalid data format:', data);
     res.status(400).json({ error: 'Invalid data' });
   }
 });
+
+async function sendToGoogleSheets(data) {
+  try {
+    const SHEET_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+    
+    for (const item of data) {
+      await fetch(SHEET_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          keyword: item.keyword,
+          search_volume: item.search_volume,
+          selected_date: item.selected_date,
+          checked_time: item.checked_time
+        })
+      });
+    }
+    console.log('Data sent to Google Sheets');
+  } catch (error) {
+    console.error('Google Sheets error:', error);
+  }
+}
 
 // Get keywords
 app.get('/api/keywords', (req, res) => {
