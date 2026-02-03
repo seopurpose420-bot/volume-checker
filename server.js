@@ -37,7 +37,7 @@ app.post('/api/keywords', async (req, res) => {
 
 async function sendToGoogleSheets(data) {
   try {
-    const SHEET_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+    const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyHtBke-cPp_MylCCF1rcCaWQpflidsxBOou6_9dzNAstEMR4W7_xlfhcakIj0wfvNe/exec';
     
     for (const item of data) {
       await fetch(SHEET_URL, {
