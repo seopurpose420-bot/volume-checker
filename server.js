@@ -17,7 +17,7 @@ app.post('/api/login', (req, res) => {
   }
 });
 
-// Store keywords
+// Store keywords (no auth required for posting)
 app.post('/api/keywords', (req, res) => {
   const { data } = req.body;
   if (data && Array.isArray(data)) {
